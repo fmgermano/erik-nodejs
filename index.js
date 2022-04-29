@@ -53,7 +53,36 @@ function obterEndereco (idUsuario,callback) {
 
 }
 
-const usuarioPromise = obterUsuario()
+
+//1o passo add a palavra ascyn na funcao -> automaticamente ela retorna uma promise
+main() 
+async function main() {
+  try {
+    console.time('medida-promise')
+    const usuario = await obterUsuario()
+     //const telefone = await obterTelefone(usuario.id)
+    // const endereco = await obterEnderecoAsync(usuario.id)
+    const resultado = await Promise.all([
+      obterTelefone(usuario.id),
+      obterEnderecoAsync(usuario.id)
+    ])
+    const endereco = resultado[1]
+    const telefone = resultado[0]
+    console.log(`
+    Nome: ${usuario.nome},
+    Telefone: (${telefone.ddd}),${telefone.telefone}
+    Endereco: ${endereco.rua}, ${endereco.numero},
+    
+    `)
+    console.timeEnd('medida-promise')
+
+  }
+  catch(error) {
+    console.error('Deu ruim', error)
+  }
+}
+
+/* const usuarioPromise = obterUsuario()
 //para manipular o sucesso , usamos a funcao .ten
 // p manipular erro,usamos o .catch
 usuarioPromise
@@ -89,7 +118,7 @@ usuarioPromise
 .catch(function (error) {
   console.error(' deu ruim', error)
 })
-
+ */
 
 
 
